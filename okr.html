@@ -25,11 +25,18 @@
             margin-bottom: 30px;
         }
         .okr-box h2 {
-            color: #003366;
+            color: #d32f2f;
             font-weight: 700;
             margin-bottom: 15px;
         }
+        .okr-key-results {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
         .okr-key-result {
+            flex: 1;
+            min-width: 250px;
             margin: 15px 0;
         }
         .progress-bar {
@@ -66,6 +73,7 @@
                 
                 let currentObjective = '';
                 let currentBox = null;
+                let keyResultsContainer = null;
 
                 data.forEach((okr) => {
                     if (okr['هدف'] !== currentObjective) {
@@ -75,10 +83,16 @@
                         currentBox = document.createElement('div');
                         currentBox.className = 'okr-box';
                         currentBox.innerHTML = `<h2>${okr['هدف']}</h2>`;
+
+                        // ایجاد بخش نتایج کلیدی به صورت افقی
+                        keyResultsContainer = document.createElement('div');
+                        keyResultsContainer.className = 'okr-key-results';
+                        currentBox.appendChild(keyResultsContainer);
+
                         okrContainer.appendChild(currentBox);
                     }
 
-                    // اضافه کردن نتایج کلیدی به باکس هدف مربوطه
+                    // اضافه کردن نتایج کلیدی به بخش مربوطه
                     const keyResult = document.createElement('div');
                     keyResult.className = 'okr-key-result';
                     const progressPercentage = Math.min((okr['مقدار فعلی'] / okr['مقدار نهایی']) * 100, 100);
@@ -91,7 +105,7 @@
                         <p>وضعیت فعلی: ${okr['مقدار فعلی']} ${okr['واحد اندازه‌گیری']}</p>
                         <p>تارگت نهایی: ${okr['مقدار نهایی']} ${okr['واحد اندازه‌گیری']}</p>
                     `;
-                    currentBox.appendChild(keyResult);
+                    keyResultsContainer.appendChild(keyResult);
                 });
             }
         });
