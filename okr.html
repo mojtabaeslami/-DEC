@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اهداف دکاموند</title>
+    <title>پایش اهداف</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
@@ -43,7 +43,7 @@
             min-width: 300px;
         }
         .okr-box h3 {
-            color: #d32f2f;
+$1color: var(--title-color, #d32f2f);
             font-weight: 700;
             margin-bottom: 15px;
         }
@@ -87,7 +87,7 @@
     <div class="header">
         <img src="logo.png" alt="لوگوی شرکت دکاموند" style="display: block; margin: 0 auto; margin-bottom: 20px; max-width: 150px;">
         <h1 style="color: #d32f2f; font-size: 2.5em;">پایش اهداف</h1>
-        <p> سه ماهه سوم سال ۱۴۰۳</p>
+        <p>سه ماهه سوم سال ۱۴۰۳</p>
     </div>
 
     <div id="okr-container"></div>
@@ -125,12 +125,7 @@
 
                     let currentObjectives = {};
 
-                    teams[team].forEach((okr) => {
-                        if (!currentObjectives[okr['هدف']]) {
-                            // ایجاد باکس جدید برای هر هدف
-                            currentObjectives[okr['هدف']] = document.createElement('div');
-                            currentObjectives[okr['هدف']].className = 'okr-box';
-                            currentObjectives[okr['هدف']].innerHTML = `<h3>${okr['هدف']}</h3>`;
+                    $1<h3 style="color: ${['#d32f2f', '#3f51b5', '#4caf50', '#ff9800'][Math.floor(Math.random() * 4)]};">$2</h3>`;
 
                             // ایجاد بخش نتایج کلیدی به صورت افقی
                             const keyResultsContainer = document.createElement('div');
