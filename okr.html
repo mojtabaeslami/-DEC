@@ -86,8 +86,8 @@
                 let currentBox = null;
                 let keyResultsContainer = null;
 
-                data.forEach((okr) => {
-                    if (okr['هدف'] !== currentObjective) {
+                $1if (!okr['هدف'] || okr['هدف'] === 'undefined' || !okr['نتیجه کلیدی'] || okr['نتیجه کلیدی'] === 'undefined') return;
+if (okr['هدف'] !== currentObjective) {
                         currentObjective = okr['هدف'];
 
                         // ایجاد باکس جدید برای هر هدف
