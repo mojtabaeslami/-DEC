@@ -110,28 +110,25 @@
                     teamContainer.className = 'okr-team';
                     teamContainer.innerHTML = `<h2>تیم: ${team}</h2>`;
 
-                    let currentObjective = '';
-                    let currentBox = null;
-                    let keyResultsContainer = null;
+                    let currentObjectives = {};
 
                     teams[team].forEach((okr) => {
-                        if (okr['هدف'] !== currentObjective) {
-                            currentObjective = okr['هدف'];
-
+                        if (!currentObjectives[okr['هدف']]) {
                             // ایجاد باکس جدید برای هر هدف
-                            currentBox = document.createElement('div');
-                            currentBox.className = 'okr-box';
-                            currentBox.innerHTML = `<h3>${okr['هدف']}</h3>`;
+                            currentObjectives[okr['هدف']] = document.createElement('div');
+                            currentObjectives[okr['هدف']].className = 'okr-box';
+                            currentObjectives[okr['هدف']].innerHTML = `<h3>${okr['هدف']}</h3>`;
 
                             // ایجاد بخش نتایج کلیدی به صورت افقی
-                            keyResultsContainer = document.createElement('div');
+                            const keyResultsContainer = document.createElement('div');
                             keyResultsContainer.className = 'okr-key-results';
-                            currentBox.appendChild(keyResultsContainer);
+                            currentObjectives[okr['هدف']].appendChild(keyResultsContainer);
 
-                            teamContainer.appendChild(currentBox);
+                            teamContainer.appendChild(currentObjectives[okr['هدف']]);
                         }
 
                         // اضافه کردن نتایج کلیدی به بخش مربوطه
+                        const keyResultsContainer = currentObjectives[okr['هدف']].querySelector('.okr-key-results');
                         const keyResult = document.createElement('div');
                         keyResult.className = 'okr-key-result';
                         const progressPercentage = Math.min((okr['مقدار فعلی'] / okr['مقدار نهایی']) * 100, 100);
