@@ -17,6 +17,14 @@
             line-height: 1.6;
             direction: rtl;
         }
+        .okr-team {
+            margin-bottom: 50px;
+        }
+        .okr-team h2 {
+            color: #d32f2f;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
         .okr-box {
             background: #fff;
             border-radius: 15px;
@@ -24,7 +32,7 @@
             padding: 20px;
             margin-bottom: 30px;
         }
-        .okr-box h2 {
+        .okr-box h3 {
             color: #d32f2f;
             font-weight: 700;
             margin-bottom: 15px;
@@ -82,47 +90,65 @@
             complete: function(results) {
                 const data = results.data;
                 const okrContainer = document.getElementById('okr-container');
-                
-                let currentObjective = '';
-                let currentBox = null;
-                let keyResultsContainer = null;
+                const teams = {};
 
+                // دسته بندی داده‌ها بر اساس تیم‌ها
                 data.forEach((okr) => {
-                    if (!okr['هدف'] || okr['هدف'] === 'undefined' || !okr['نتیجه کلیدی'] || okr['نتیجه کلیدی'] === 'undefined') {
+                    if (!okr['تیم'] || !okr['هدف'] || okr['هدف'] === 'undefined' || !okr['نتیجه کلیدی'] || okr['نتیجه کلیدی'] === 'undefined') {
                         return;
                     }
 
-                    if (okr['هدف'] !== currentObjective) {
-                        currentObjective = okr['هدف'];
-
-                        // ایجاد باکس جدید برای هر هدف
-                        currentBox = document.createElement('div');
-                        currentBox.className = 'okr-box';
-                        currentBox.innerHTML = `<h2>${okr['هدف']}</h2>`;
-
-                        // ایجاد بخش نتایج کلیدی به صورت افقی
-                        keyResultsContainer = document.createElement('div');
-                        keyResultsContainer.className = 'okr-key-results';
-                        currentBox.appendChild(keyResultsContainer);
-
-                        okrContainer.appendChild(currentBox);
+                    if (!teams[okr['تیم']]) {
+                        teams[okr['تیم']] = [];
                     }
-
-                    // اضافه کردن نتایج کلیدی به بخش مربوطه
-                    const keyResult = document.createElement('div');
-                    keyResult.className = 'okr-key-result';
-                    const progressPercentage = Math.min((okr['مقدار فعلی'] / okr['مقدار نهایی']) * 100, 100);
-                    keyResult.innerHTML = `
-                        <h3>${okr['نتیجه کلیدی']}</h3>
-                        <div class="progress-bar">
-                            <div class="progress" style="width: ${progressPercentage}%;"></div>
-                        </div>
-                        <p>وضعیت شروع: ${okr['مقدار شروع']} ${okr['واحد اندازه‌گیری']}</p>
-                        <p>وضعیت فعلی: ${okr['مقدار فعلی']} ${okr['واحد اندازه‌گیری']}</p>
-                        <p>تارگت نهایی: ${okr['مقدار نهایی']} ${okr['واحد اندازه‌گیری']}</p>
-                    `;
-                    keyResultsContainer.appendChild(keyResult);
+                    teams[okr['تیم']].push(okr);
                 });
+
+                // نمایش OKR ها بر اساس تیم‌ها
+                for (const team in teams) {
+                    const teamContainer = document.createElement('div');
+                    teamContainer.className = 'okr-team';
+                    teamContainer.innerHTML = `<h2>تیم: ${team}</h2>`;
+
+                    let currentObjective = '';
+                    let currentBox = null;
+                    let keyResultsContainer = null;
+
+                    teams[team].forEach((okr) => {
+                        if (okr['هدف'] !== currentObjective) {
+                            currentObjective = okr['هدف'];
+
+                            // ایجاد باکس جدید برای هر هدف
+                            currentBox = document.createElement('div');
+                            currentBox.className = 'okr-box';
+                            currentBox.innerHTML = `<h3>${okr['هدف']}</h3>`;
+
+                            // ایجاد بخش نتایج کلیدی به صورت افقی
+                            keyResultsContainer = document.createElement('div');
+                            keyResultsContainer.className = 'okr-key-results';
+                            currentBox.appendChild(keyResultsContainer);
+
+                            teamContainer.appendChild(currentBox);
+                        }
+
+                        // اضافه کردن نتایج کلیدی به بخش مربوطه
+                        const keyResult = document.createElement('div');
+                        keyResult.className = 'okr-key-result';
+                        const progressPercentage = Math.min((okr['مقدار فعلی'] / okr['مقدار نهایی']) * 100, 100);
+                        keyResult.innerHTML = `
+                            <h3>${okr['نتیجه کلیدی']}</h3>
+                            <div class="progress-bar">
+                                <div class="progress" style="width: ${progressPercentage}%;"></div>
+                            </div>
+                            <p>وضعیت شروع: ${okr['مقدار شروع']} ${okr['واحد اندازه‌گیری']}</p>
+                            <p>وضعیت فعلی: ${okr['مقدار فعلی']} ${okr['واحد اندازه‌گیری']}</p>
+                            <p>تارگت نهایی: ${okr['مقدار نهایی']} ${okr['واحد اندازه‌گیری']}</p>
+                        `;
+                        keyResultsContainer.appendChild(keyResult);
+                    });
+
+                    okrContainer.appendChild(teamContainer);
+                }
             }
         });
     </script>
