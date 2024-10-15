@@ -43,7 +43,7 @@
             min-width: 300px;
         }
         .okr-box h3 {
-$1color: var(--title-color, #d32f2f);
+            color: #d32f2f;
             font-weight: 700;
             margin-bottom: 15px;
         }
@@ -104,7 +104,7 @@ $1color: var(--title-color, #d32f2f);
 
                 // دسته بندی داده‌ها بر اساس تیم‌ها
                 data.forEach((okr) => {
-                    if (!okr['تیم'] || !okr['هدف'] || okr['هدف'] === 'undefined' || !okr['نتیجه کلیدی'] || okr['نتیجه کلیدی'] === 'undefined') {
+                    if (!okr['تیم'] || !okr['هدف'] || !okr['نتیجه کلیدی']) {
                         return;
                     }
 
@@ -125,7 +125,12 @@ $1color: var(--title-color, #d32f2f);
 
                     let currentObjectives = {};
 
-                    $1<h3 style="color: ${['#d32f2f', '#3f51b5', '#4caf50', '#ff9800'][Math.floor(Math.random() * 4)]};">$2</h3>`;
+                    teams[team].forEach((okr) => {
+                        if (!currentObjectives[okr['هدف']]) {
+                            // ایجاد باکس جدید برای هر هدف
+                            currentObjectives[okr['هدف']] = document.createElement('div');
+                            currentObjectives[okr['هدف']].className = 'okr-box';
+                            currentObjectives[okr['هدف']].innerHTML = `<h3 style="color: ${['#d32f2f', '#3f51b5', '#4caf50', '#ff9800'][Math.floor(Math.random() * 4)]};">${okr['هدف']}</h3>`;
 
                             // ایجاد بخش نتایج کلیدی به صورت افقی
                             const keyResultsContainer = document.createElement('div');
