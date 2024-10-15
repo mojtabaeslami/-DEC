@@ -17,13 +17,20 @@
             line-height: 1.6;
             direction: rtl;
         }
-        .okr-tree {
-            list-style: none;
-            padding-right: 20px;
+        .okr-box {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 30px;
         }
-        .okr-tree h2, .okr-tree h3 {
+        .okr-box h2 {
             color: #003366;
             font-weight: 700;
+            margin-bottom: 15px;
+        }
+        .okr-key-result {
+            margin: 15px 0;
         }
         .progress-bar {
             background: #e0e0e0;
@@ -37,11 +44,16 @@
             height: 100%;
             transition: width 0.4s ease-in-out;
         }
+        p {
+            font-size: 1.1em;
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
     <h1 style="text-align: center; color: #003366; font-size: 2.5em; margin-bottom: 40px;">اهداف و نتایج کلیدی سازمان</h1>
-    <ul class="okr-tree" id="okr-list"></ul>
+
+    <div id="okr-container"></div>
 
     <script>
         // خواندن فایل CSV
@@ -50,13 +62,26 @@
             header: true,
             complete: function(results) {
                 const data = results.data;
-                const okrList = document.getElementById('okr-list');
+                const okrContainer = document.getElementById('okr-container');
+                
+                let currentObjective = '';
+                let currentBox = null;
 
                 data.forEach((okr) => {
-                    // ساختار HTML برای هر هدف یا نتیجه کلیدی
-                    const listItem = document.createElement('li');
-                    listItem.innerHTML = `
-                        <h2>${okr['هدف']}</h2>
+                    if (okr['هدف'] !== currentObjective) {
+                        currentObjective = okr['هدف'];
+
+                        // ایجاد باکس جدید برای هر هدف
+                        currentBox = document.createElement('div');
+                        currentBox.className = 'okr-box';
+                        currentBox.innerHTML = `<h2>${okr['هدف']}</h2>`;
+                        okrContainer.appendChild(currentBox);
+                    }
+
+                    // اضافه کردن نتایج کلیدی به باکس هدف مربوطه
+                    const keyResult = document.createElement('div');
+                    keyResult.className = 'okr-key-result';
+                    keyResult.innerHTML = `
                         <h3>${okr['نتیجه کلیدی']}</h3>
                         <div class="progress-bar">
                             <div class="progress" style="width: ${okr['درصد پیشرفت']}%;"></div>
@@ -65,7 +90,7 @@
                         <p>وضعیت فعلی: ${okr['مقدار فعلی']}</p>
                         <p>تارگت نهایی: ${okr['مقدار نهایی']}</p>
                     `;
-                    okrList.appendChild(listItem);
+                    currentBox.appendChild(keyResult);
                 });
             }
         });
