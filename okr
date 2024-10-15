@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد OKR سازمان</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap">
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background: linear-gradient(to right, #ece9e6, #ffffff);
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            direction: rtl;
+        }
+        .okr-tree {
+            list-style: none;
+            padding-right: 20px;
+        }
+        .okr-tree li {
+            margin: 15px 0;
+            position: relative;
+        }
+        .okr-tree li::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -20px;
+            width: 10px;
+            height: 100%;
+            border-right: 2px solid #003366;
+        }
+        .okr-tree li::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            right: -20px;
+            width: 20px;
+            height: 2px;
+            background: #003366;
+        }
+        .okr-tree h2, .okr-tree h3 {
+            color: #003366;
+            font-weight: 700;
+        }
+        .progress-bar {
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            height: 25px;
+            margin: 10px 0;
+        }
+        .progress {
+            background: linear-gradient(to left, #4caf50, #81c784);
+            height: 100%;
+            transition: width 0.4s ease-in-out;
+        }
+        .behind-schedule {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        p {
+            font-size: 1.1em;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center; color: #003366; font-size: 2.5em; margin-bottom: 40px;">اهداف و نتایج کلیدی سازمان (سه ماهه سوم ۱۴۰۳)</h1>
+
+    <ul class="okr-tree">
+        <li>
+            <h2>هدف اول: رسیدن به تارگت درآمد</h2>
+            <ul>
+                <li>
+                    <h3>نتیجه کلیدی ۱: درآمد ۳ و نیم میلیارد تومان</h3>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 62.86%;"></div>
+                    </div>
+                    <p>وضعیت فعلی: ۲.۲ میلیارد تومان (از ۸۰۰ میلیون تومان شروع شده)</p>
+                    <p class="behind-schedule">وضعیت: عقب از برنامه</p>
+                </li>
+                <li>
+                    <h3>نتیجه کلیدی ۲: سود خالص ۹۰۰ میلیون تومان</h3>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 0%;"></div>
+                    </div>
+                    <p>وضعیت فعلی: صفر تومان (از صفر شروع شده)</p>
+                    <p class="behind-schedule">وضعیت: عقب از برنامه</p>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <h2>هدف دوم: معرفی مناسب شرکت</h2>
+            <ul>
+                <li>
+                    <h3>نتیجه کلیدی ۱: تکمیل نسخه فارسی وبسایت</h3>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 0%;"></div>
+                    </div>
+                    <p>وضعیت فعلی: ۰ درصد</p>
+                    <p class="behind-schedule">وضعیت: عقب از برنامه</p>
+                </li>
+                <li>
+                    <h3>نتیجه کلیدی ۲: انتشار ۲۵ پست اینستاگرام برای معرفی</h3>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 12%;"></div>
+                    </div>
+                    <p>وضعیت فعلی: ۳ پست منتشر شده</p>
+                    <p class="behind-schedule">وضعیت: عقب از برنامه</p>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+</body>
+</html>
