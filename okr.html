@@ -11,7 +11,7 @@
             font-family: 'Vazirmatn', sans-serif;
             background: linear-gradient(to right, #ece9e6, #ffffff);
             color: #333;
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
             line-height: 1.6;
@@ -25,12 +25,19 @@
             font-weight: 700;
             margin-bottom: 20px;
         }
+        .okr-box-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
         .okr-box {
             background: #fff;
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             padding: 20px;
             margin-bottom: 30px;
+            flex: 1;
+            min-width: 300px;
         }
         .okr-box h3 {
             color: #d32f2f;
@@ -110,6 +117,9 @@
                     teamContainer.className = 'okr-team';
                     teamContainer.innerHTML = `<h2>تیم: ${team}</h2>`;
 
+                    const okrBoxContainer = document.createElement('div');
+                    okrBoxContainer.className = 'okr-box-container';
+
                     let currentObjectives = {};
 
                     teams[team].forEach((okr) => {
@@ -124,7 +134,7 @@
                             keyResultsContainer.className = 'okr-key-results';
                             currentObjectives[okr['هدف']].appendChild(keyResultsContainer);
 
-                            teamContainer.appendChild(currentObjectives[okr['هدف']]);
+                            okrBoxContainer.appendChild(currentObjectives[okr['هدف']]);
                         }
 
                         // اضافه کردن نتایج کلیدی به بخش مربوطه
@@ -144,6 +154,7 @@
                         keyResultsContainer.appendChild(keyResult);
                     });
 
+                    teamContainer.appendChild(okrBoxContainer);
                     okrContainer.appendChild(teamContainer);
                 }
             }
