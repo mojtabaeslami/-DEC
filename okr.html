@@ -66,7 +66,8 @@
     </style>
 </head>
 <body>
-    <img src="logo.png" alt="لوگوی شرکت دکاموند" style="display: block; margin: 0 auto; margin-bottom: 20px; max-width: 150px;"><img src="logo.png" alt="لوگوی شرکت دکاموند">
+    <div class="header">
+        <img src="logo.png" alt="لوگوی شرکت دکاموند" style="display: block; margin: 0 auto; margin-bottom: 20px; max-width: 150px;">
         <h1 style="color: #d32f2f; font-size: 2.5em;">اهداف دکاموند</h1>
         <p>اهداف مربوط به سه ماهه سوم سال ۱۴۰۳</p>
     </div>
@@ -86,8 +87,12 @@
                 let currentBox = null;
                 let keyResultsContainer = null;
 
-                $1if (!okr['هدف'] || okr['هدف'] === 'undefined' || !okr['نتیجه کلیدی'] || okr['نتیجه کلیدی'] === 'undefined') return;
-if (okr['هدف'] !== currentObjective) {
+                data.forEach((okr) => {
+                    if (!okr['هدف'] || okr['هدف'] === 'undefined' || !okr['نتیجه کلیدی'] || okr['نتیجه کلیدی'] === 'undefined') {
+                        return;
+                    }
+
+                    if (okr['هدف'] !== currentObjective) {
                         currentObjective = okr['هدف'];
 
                         // ایجاد باکس جدید برای هر هدف
