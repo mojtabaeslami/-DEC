@@ -81,10 +81,11 @@
                     // اضافه کردن نتایج کلیدی به باکس هدف مربوطه
                     const keyResult = document.createElement('div');
                     keyResult.className = 'okr-key-result';
+                    const progressPercentage = Math.min((okr['مقدار فعلی'] / okr['مقدار نهایی']) * 100, 100);
                     keyResult.innerHTML = `
                         <h3>${okr['نتیجه کلیدی']}</h3>
                         <div class="progress-bar">
-                            <div class="progress" style="width: ${okr['درصد پیشرفت']}%;"></div>
+                            <div class="progress" style="width: ${progressPercentage}%;"></div>
                         </div>
                         <p>وضعیت شروع: ${okr['مقدار شروع']}</p>
                         <p>وضعیت فعلی: ${okr['مقدار فعلی']}</p>
