@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-    <meta charset="UTF-function(match) { return match.replace(/[0-9]/g, function(d) { return '۰۱۲۳۴۵۶۷۸۹'[d]; }); }">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>پایش اهداف</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap">
@@ -114,6 +114,12 @@
     <div id="okr-container"></div>
 
     <script>
+        function convertToPersianNumbers(str) {
+            return str.replace(/[0-9]/g, function(d) {
+                return '۰۱۲۳۴۵۶۷۸۹'[d];
+            });
+        }
+
         // خواندن فایل CSV
         Papa.parse('okr-data.csv', {
             download: true,
@@ -139,7 +145,7 @@
                 for (const team in teams) {
                     const teamContainer = document.createElement('div');
                     teamContainer.className = 'okr-team';
-                    teamContainer.innerHTML = `<h2>تیم: ${team}</h2>`;
+                    teamContainer.innerHTML = `<h2>تیم: ${convertToPersianNumbers(team)}</h2>`;
 
                     const okrBoxContainer = document.createElement('div');
                     okrBoxContainer.className = 'okr-box-container';
@@ -152,7 +158,7 @@
                             // ایجاد باکس جدید برای هر هدف
                             currentObjectives[okr['هدف']] = document.createElement('div');
                             currentObjectives[okr['هدف']].className = 'okr-box';
-                            currentObjectives[okr['هدف']].innerHTML = `<h3>${objectiveIndex}. ${okr['هدف']}</h3>`;
+                            currentObjectives[okr['هدف']].innerHTML = `<h3>${convertToPersianNumbers(objectiveIndex.toString())}. ${okr['هدف']}</h3>`;
 
                             // ایجاد بخش نتایج کلیدی به صورت افقی
                             const keyResultsContainer = document.createElement('div');
@@ -169,12 +175,12 @@
                         keyResult.className = 'okr-key-result';
                         const progressPercentage = Math.min((okr['مقدار فعلی'] / okr['مقدار نهایی']) * 100, 100);
                         keyResult.innerHTML = `
-                            <h3>${index + 1}. ${okr['نتیجه کلیدی']}</h3>
+                            <h3>${convertToPersianNumbers((index + 1).toString())}. ${okr['نتیجه کلیدی']}</h3>
                             <div class="progress-bar">
                                 <div class="progress" style="width: ${progressPercentage}%;"></div>
-                                <div class="progress-value">${progressPercentage.toFixed(1)}%</div>
+                                <div class="progress-value">${convertToPersianNumbers(progressPercentage.toFixed(1))}%</div>
                             </div>
-                            <p>وضعیت فعلی: ${okr['مقدار فعلی']} ${okr['واحد اندازه‌گیری']}</p>
+                            <p>وضعیت فعلی: ${convertToPersianNumbers(okr['مقدار فعلی'])} ${okr['واحد اندازه‌گیری']}</p>
                         `;
                         keyResultsContainer.appendChild(keyResult);
                     });
