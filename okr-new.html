@@ -153,7 +153,7 @@
                     let currentObjectives = {};
                     let objectiveIndex = 1;
 
-                    teams[team].forEach((okr, index) => {
+                    teams[team].forEach((okr) => {
                         if (!currentObjectives[okr['هدف']]) {
                             // ایجاد باکس جدید برای هر هدف
                             currentObjectives[okr['هدف']] = document.createElement('div');
@@ -174,8 +174,9 @@
                         const keyResult = document.createElement('div');
                         keyResult.className = 'okr-key-result';
                         const progressPercentage = Math.min((okr['مقدار فعلی'] / okr['مقدار نهایی']) * 100, 100);
+                        const keyResultIndex = keyResultsContainer.children.length + 1;
                         keyResult.innerHTML = `
-                            <h3>${convertToPersianNumbers((index + 1).toString())}. ${okr['نتیجه کلیدی']}</h3>
+                            <h3>${convertToPersianNumbers(keyResultIndex.toString())}. ${okr['نتیجه کلیدی']}</h3>
                             <div class="progress-bar">
                                 <div class="progress" style="width: ${progressPercentage}%;"></div>
                                 <div class="progress-value">${convertToPersianNumbers(progressPercentage.toFixed(1))}%</div>
