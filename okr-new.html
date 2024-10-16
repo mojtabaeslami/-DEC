@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پایش اهداف</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            direction: rtl;
+        }
+        .okr-team {
+            margin-bottom: 50px;
+        }
+        .okr-team h2 {
+            color: #ff6f61;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 2em;
+        }
+        .okr-box-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            border-top: 2px dashed #ff6f61;
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+        .okr-box {
+            background: linear-gradient(to bottom, #ffffff, #f1f1f1);
+            border-radius: 20px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+            flex: 1;
+            min-width: 300px;
+            transition: transform 0.3s;
+        }
+        .okr-box:hover {
+            transform: translateY(-10px);
+        }
+        .okr-box h3 {
+            color: ${['#ff6f61', '#ab47bc', '#26a69a', '#ffa726'][Math.floor(Math.random() * 4)]};
+            font-weight: 700;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        .okr-key-results {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .okr-key-result {
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            flex: 1;
+            min-width: 250px;
+            text-align: center;
+        }
+        .progress-bar {
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            height: 25px;
+            margin: 10px 0;
+            position: relative;
+        }
+        .progress {
+            background: linear-gradient(to right, #4caf50, #81c784);
+            height: 100%;
+            transition: width 0.4s ease-in-out;
+            border-radius: 15px;
+        }
+        .progress-value {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: bold;
+            color: #333;
+        }
+        p {
+            font-size: 1.1em;
+            margin: 15px 0;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .header img {
+            max-width: 200px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="logo.png" alt="لوگوی شرکت دکاموند">
+        <h1 style="color: #ff6f61; font-size: 3em;">پایش اهداف</h1>
+        <p style="font-size: 1.5em; color: #ff6f61;">سه ماهه سوم سال ۱۴۰۳</p>
+    </div>
+
+    <div id="okr-container"></div>
+
+    <script>
+        // خواندن فایل CSV
+        Papa.parse('okr-data.csv', {
+            download: true,
+            header: true,
+            complete: function(results) {
+                const data = results.data;
+                const okrContainer = document.getElementById('okr-container');
+                const teams = {};
+
+                // دسته بندی داده‌ها بر اساس تیم‌ها
+                data.forEach((okr) => {
+                    if (!okr['تیم'] || !okr['هدف'] || !okr['نتیجه کلیدی']) {
+                        return;
+                    }
+
+                    if (!teams[okr['تیم']]) {
+                        teams[okr['تیم']] = [];
+                    }
+                    teams[okr['تیم']].push(okr);
+                });
+
+                // نمایش OKR ها بر اساس تیم‌ها
+                for (const team in teams) {
+                    const teamContainer = document.createElement('div');
+                    teamContainer.className = 'okr-team';
+                    teamContainer.innerHTML = `<h2>تیم: ${team}</h2>`;
+
+                    const okrBoxContainer = document.createElement('div');
+                    okrBoxContainer.className = 'okr-box-container';
+
+                    let currentObjectives = {};
+                    let objectiveIndex = 1;
+
+                    teams[team].forEach((okr, index) => {
+                        if (!currentObjectives[okr['هدف']]) {
+                            // ایجاد باکس جدید برای هر هدف
+                            currentObjectives[okr['هدف']] = document.createElement('div');
+                            currentObjectives[okr['هدف']].className = 'okr-box';
+                            currentObjectives[okr['هدف']].innerHTML = `<h3>${objectiveIndex}. ${okr['هدف']}</h3>`;
+
+                            // ایجاد بخش نتایج کلیدی به صورت افقی
+                            const keyResultsContainer = document.createElement('div');
+                            keyResultsContainer.className = 'okr-key-results';
+                            currentObjectives[okr['هدف']].appendChild(keyResultsContainer);
+
+                            okrBoxContainer.appendChild(currentObjectives[okr['هدف']]);
+                            objectiveIndex++;
+                        }
+
+                        // اضافه کردن نتایج کلیدی به بخش مربوطه
+                        const keyResultsContainer = currentObjectives[okr['هدف']].querySelector('.okr-key-results');
+                        const keyResult = document.createElement('div');
+                        keyResult.className = 'okr-key-result';
+                        const progressPercentage = Math.min((okr['مقدار فعلی'] / okr['مقدار نهایی']) * 100, 100);
+                        keyResult.innerHTML = `
+                            <h3>${index + 1}. ${okr['نتیجه کلیدی']}</h3>
+                            <div class="progress-bar">
+                                <div class="progress" style="width: ${progressPercentage}%;"></div>
+                                <div class="progress-value">${progressPercentage.toFixed(1)}%</div>
+                            </div>
+                            <p>وضعیت فعلی: ${okr['مقدار فعلی']} ${okr['واحد اندازه‌گیری']}</p>
+                        `;
+                        keyResultsContainer.appendChild(keyResult);
+                    });
+
+                    teamContainer.appendChild(okrBoxContainer);
+                    okrContainer.appendChild(teamContainer);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
