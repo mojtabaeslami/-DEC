@@ -85,7 +85,7 @@
 </head>
 <body>
     <div class="header">
-        <img src="logo.png" alt="لوگوی شرکت دکاموند" style="display: block; margin: 0 auto; margin-bottom: 20px; max-width: 500px;">
+        <img src="logo.png" alt="لوگوی شرکت دکاموند" style="display: block; margin: 0 auto; margin-bottom: 20px; max-width: 150px;">
         <h1 style="color: #d32f2f; font-size: 2.5em;">پایش اهداف</h1>
         <p>سه ماهه سوم سال ۱۴۰۳</p>
     </div>
@@ -124,13 +124,14 @@
                     okrBoxContainer.className = 'okr-box-container';
 
                     let currentObjectives = {};
+                    let objectiveIndex = 1;
 
-                    teams[team].forEach((okr) => {
+                    teams[team].forEach((okr, index) => {
                         if (!currentObjectives[okr['هدف']]) {
                             // ایجاد باکس جدید برای هر هدف
                             currentObjectives[okr['هدف']] = document.createElement('div');
                             currentObjectives[okr['هدف']].className = 'okr-box';
-                            currentObjectives[okr['هدف']].innerHTML = `<h3 style="color: ${['#d32f2f', '#3f51b5', '#4caf50', '#ff9800'][Math.floor(Math.random() * 4)]};">${okr['هدف']}</h3>`;
+                            currentObjectives[okr['هدف']].innerHTML = `<h3 style="color: ${['#d32f2f', '#3f51b5', '#4caf50', '#ff9800'][Math.floor(Math.random() * 4)]};">${objectiveIndex}. ${okr['هدف']}</h3>`;
 
                             // ایجاد بخش نتایج کلیدی به صورت افقی
                             const keyResultsContainer = document.createElement('div');
@@ -138,6 +139,7 @@
                             currentObjectives[okr['هدف']].appendChild(keyResultsContainer);
 
                             okrBoxContainer.appendChild(currentObjectives[okr['هدف']]);
+                            objectiveIndex++;
                         }
 
                         // اضافه کردن نتایج کلیدی به بخش مربوطه
@@ -146,13 +148,11 @@
                         keyResult.className = 'okr-key-result';
                         const progressPercentage = Math.min((okr['مقدار فعلی'] / okr['مقدار نهایی']) * 100, 100);
                         keyResult.innerHTML = `
-                            <h3>${okr['نتیجه کلیدی']}</h3>
+                            <h3>${index + 1}. ${okr['نتیجه کلیدی']}</h3>
                             <div class="progress-bar">
                                 <div class="progress" style="width: ${progressPercentage}%;"></div>
                             </div>
-                            <p>وضعیت شروع: ${okr['مقدار شروع']} ${okr['واحد اندازه‌گیری']}</p>
                             <p>وضعیت فعلی: ${okr['مقدار فعلی']} ${okr['واحد اندازه‌گیری']}</p>
-                            <p>تارگت نهایی: ${okr['مقدار نهایی']} ${okr['واحد اندازه‌گیری']}</p>
                         `;
                         keyResultsContainer.appendChild(keyResult);
                     });
