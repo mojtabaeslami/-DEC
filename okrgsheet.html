@@ -142,15 +142,15 @@
 
                 // پردازش داده‌ها
                 rows.slice(1).forEach((row) => {
-                    const [team, objective, keyResult, startValue, currentValue, targetValue, unit] = row;
-                    if (!team || !objective || !keyResult) {
+                    const [team, objective, keyResult, type, startValue, currentValue, targetValue, unit] = row;
+                    if (!team || !objective || !keyResult || type !== 'نتیجه کلیدی') {
                         return;
                     }
 
-                    // تبدیل مقادیر به اعداد
-                    const parsedStartValue = parseFloat(startValue.replace(/,/g, '')) || 0;
-                    const parsedCurrentValue = parseFloat(currentValue.replace(/,/g, '')) || 0;
-                    const parsedTargetValue = parseFloat(targetValue.replace(/,/g, '')) || 0;
+                    // تبدیل مقادیر به اعداد و بررسی اینکه مقدار هدف و وضعیت فعلی صحیح باشند
+                    const parsedStartValue = isNaN(parseFloat(startValue)) ? 0 : parseFloat(startValue.replace(/,/g, ''));
+                    const parsedCurrentValue = isNaN(parseFloat(currentValue)) ? 0 : parseFloat(currentValue.replace(/,/g, ''));
+                    const parsedTargetValue = isNaN(parseFloat(targetValue)) ? 0 : parseFloat(targetValue.replace(/,/g, ''));
 
                     if (!teams[team]) {
                         teams[team] = [];
@@ -198,7 +198,7 @@
                         const keyResultsContainer = currentObjectives[okr.objective].querySelector('.okr-key-results');
                         const keyResult = document.createElement('div');
                         keyResult.className = 'okr-key-result';
-                        const progressPercentage = Math.min((okr.currentValue / okr.targetValue) * 100, 100);
+                        const progressPercentage = okr.targetValue > 0 ? Math.min((okr.currentValue / okr.targetValue) * 100, 100) : 0;
                         const keyResultIndex = keyResultsContainer.children.length + 1;
                         keyResult.innerHTML = `
                             <h3>${convertToPersianNumbers(keyResultIndex.toString())}. ${okr.keyResult}</h3>
@@ -206,16 +206,4 @@
                                 <div class="progress" style="width: ${progressPercentage}%;"></div>
                                 <div class="progress-value">${convertToPersianNumbers(progressPercentage.toFixed(1))}%</div>
                             </div>
-                            <p>وضعیت فعلی: ${convertToPersianNumbers(okr.currentValue.toString())} ${okr.unit}</p>
-                        `;
-                        keyResultsContainer.appendChild(keyResult);
-                    });
-
-                    teamContainer.appendChild(okrBoxContainer);
-                    okrContainer.appendChild(teamContainer);
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    </script>
-</body>
-</html>
+                            <p>وضعیت فعلی: ${convertToPersianNumbers(okr
