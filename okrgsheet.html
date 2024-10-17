@@ -92,6 +92,28 @@
             font-weight: bold;
             color: #333;
         }
+        .progress-bar-red {
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            height: 25px;
+            margin: 10px 0;
+            position: relative;
+        }
+        .progress-red {
+            background: #ff6f61;
+            height: 100%;
+            transition: width 0.4s ease-in-out;
+            border-radius: 15px;
+        }
+        .progress-value-red {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: bold;
+            color: #333;
+        }
         p {
             font-size: 1.1em;
             margin: 15px 0;
@@ -180,6 +202,8 @@
 
                     let currentObjectives = {};
                     let objectiveIndex = 1;
+                    let totalTeamProgress = 0;
+                    let objectiveCount = 0;
 
                     teams[team].forEach((okr) => {
                         if (!currentObjectives[okr.objective]) {
@@ -212,9 +236,44 @@
                             <p>وضعیت فعلی: ${convertToPersianNumbers(okr.currentValue.toString())} ${okr.unit}</p>
                         `;
                         keyResultsContainer.appendChild(keyResult);
+
+                        // محاسبه پیشرفت هدف
+                        if (!currentObjectives[okr.objective].progress) {
+                            currentObjectives[okr.objective].progress = [];
+                        }
+                        currentObjectives[okr.objective].progress.push(progressPercentage);
                     });
 
+                    // افزودن نمودار پیشرفت برای هر هدف
+                    for (const objective in currentObjectives) {
+                        const progressValues = currentObjectives[objective].progress;
+                        const averageProgress = progressValues.reduce((a, b) => a + b, 0) / progressValues.length;
+                        totalTeamProgress += averageProgress;
+                        objectiveCount++;
+
+                        const progressBarContainer = document.createElement('div');
+                        progressBarContainer.className = 'progress-bar-red';
+                        progressBarContainer.innerHTML = `
+                            <div class="progress-red" style="width: ${averageProgress}%;"></div>
+                            <div class="progress-value-red">${convertToPersianNumbers(averageProgress.toFixed(1))}%</div>
+                        `;
+                        currentObjectives[objective].appendChild(progressBarContainer);
+                    }
+
                     teamContainer.appendChild(okrBoxContainer);
+
+                    // افزودن نمودار پیشرفت برای هر تیم
+                    if (objectiveCount > 0) {
+                        const teamAverageProgress = totalTeamProgress / objectiveCount;
+                        const teamProgressBarContainer = document.createElement('div');
+                        teamProgressBarContainer.className = 'progress-bar-red';
+                        teamProgressBarContainer.innerHTML = `
+                            <div class="progress-red" style="width: ${teamAverageProgress}%;"></div>
+                            <div class="progress-value-red">${convertToPersianNumbers(teamAverageProgress.toFixed(1))}%</div>
+                        `;
+                        teamContainer.appendChild(teamProgressBarContainer);
+                    }
+
                     okrContainer.appendChild(teamContainer);
                 }
             })
