@@ -143,7 +143,7 @@
                 // پردازش داده‌ها
                 rows.slice(1).forEach((row) => {
                     const [team, objective, keyResult, type, startValue, currentValue, targetValue, unit] = row;
-                    if (!team || !objective || !keyResult || type !== 'نتیجه کلیدی') {
+                    if (!team || !objective || !keyResult || type.trim() !== 'نتیجه کلیدی') {
                         return;
                     }
 
@@ -206,4 +206,16 @@
                                 <div class="progress" style="width: ${progressPercentage}%;"></div>
                                 <div class="progress-value">${convertToPersianNumbers(progressPercentage.toFixed(1))}%</div>
                             </div>
-                            <p>وضعیت فعلی: ${convertToPersianNumbers(okr
+                            <p>وضعیت فعلی: ${convertToPersianNumbers(okr.currentValue.toString())} ${okr.unit}</p>
+                        `;
+                        keyResultsContainer.appendChild(keyResult);
+                    });
+
+                    teamContainer.appendChild(okrBoxContainer);
+                    okrContainer.appendChild(teamContainer);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    </script>
+</body>
+</html>
