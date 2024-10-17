@@ -147,6 +147,11 @@
                         return;
                     }
 
+                    // تبدیل مقادیر به اعداد
+                    const parsedStartValue = parseFloat(startValue.replace(/,/g, '')) || 0;
+                    const parsedCurrentValue = parseFloat(currentValue.replace(/,/g, '')) || 0;
+                    const parsedTargetValue = parseFloat(targetValue.replace(/,/g, '')) || 0;
+
                     if (!teams[team]) {
                         teams[team] = [];
                     }
@@ -154,9 +159,9 @@
                         team,
                         objective,
                         keyResult,
-                        startValue: parseFloat(startValue) || 0,
-                        currentValue: parseFloat(currentValue) || 0,
-                        targetValue: parseFloat(targetValue) || 0,
+                        startValue: parsedStartValue,
+                        currentValue: parsedCurrentValue,
+                        targetValue: parsedTargetValue,
                         unit
                     });
                 });
