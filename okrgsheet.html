@@ -126,8 +126,16 @@
 
         // خواندن داده‌ها از گوگل شیت
         fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
+                if (!data.values) {
+                    throw new Error('No data found in the spreadsheet. Please check the range and permissions.');
+                }
                 const rows = data.values;
                 const okrContainer = document.getElementById('okr-container');
                 const teams = {};
