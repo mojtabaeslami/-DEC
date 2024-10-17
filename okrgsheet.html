@@ -114,6 +114,28 @@
             font-weight: bold;
             color: #333;
         }
+        .progress-bar-blue {
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            height: 35px;
+            margin: 20px 0;
+            position: relative;
+        }
+        .progress-blue {
+            background: #007bff;
+            height: 100%;
+            transition: width 0.4s ease-in-out;
+            border-radius: 15px;
+        }
+        .progress-value-blue {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: bold;
+            color: #fff;
+        }
         p {
             font-size: 1.1em;
             margin: 15px 0;
@@ -126,6 +148,16 @@
             max-width: 200px;
             margin-bottom: 20px;
         }
+        #team-filter {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        #team-filter select {
+            font-size: 1.2em;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
     </style>
 </head>
 <body>
@@ -133,6 +165,13 @@
         <img src="logo.png" alt="لوگوی شرکت دکاموند">
         <h1 style="color: #ff6f61; font-size: 3em;">پایش اهداف</h1>
         <p style="font-size: 1.5em; color: #ff6f61;">سه ماهه سوم سال ۱۴۰۳</p>
+    </div>
+
+    <div id="team-filter">
+        <label for="team-select">انتخاب تیم:</label>
+        <select id="team-select">
+            <option value="all">همه تیم‌ها</option>
+        </select>
     </div>
 
     <div id="okr-container"></div>
@@ -163,6 +202,7 @@
                 }
                 const rows = data.values;
                 const okrContainer = document.getElementById('okr-container');
+                const teamSelect = document.getElementById('team-select');
                 const teams = {};
 
                 // پردازش داده‌ها
@@ -179,6 +219,11 @@
 
                     if (!teams[team]) {
                         teams[team] = [];
+                        // افزودن تیم به فیلتر
+                        const option = document.createElement('option');
+                        option.value = team;
+                        option.textContent = team;
+                        teamSelect.appendChild(option);
                     }
                     teams[team].push({
                         team,
@@ -192,90 +237,104 @@
                 });
 
                 // نمایش OKR ها بر اساس تیم‌ها
-                for (const team in teams) {
-                    const teamContainer = document.createElement('div');
-                    teamContainer.className = 'okr-team';
-                    teamContainer.innerHTML = `<h2>تیم: ${convertToPersianNumbers(team)}</h2>`;
-
-                    const okrBoxContainer = document.createElement('div');
-                    okrBoxContainer.className = 'okr-box-container';
-
-                    let currentObjectives = {};
-                    let objectiveIndex = 1;
-                    let totalTeamProgress = 0;
-                    let objectiveCount = 0;
-
-                    teams[team].forEach((okr) => {
-                        if (!currentObjectives[okr.objective]) {
-                            // ایجاد باکس جدید برای هر هدف
-                            currentObjectives[okr.objective] = document.createElement('div');
-                            currentObjectives[okr.objective].className = 'okr-box';
-                            currentObjectives[okr.objective].innerHTML = `<h3>${convertToPersianNumbers(objectiveIndex.toString())}. ${okr.objective}</h3>`;
-
-                            // ایجاد بخش نتایج کلیدی به صورت افقی
-                            const keyResultsContainer = document.createElement('div');
-                            keyResultsContainer.className = 'okr-key-results';
-                            currentObjectives[okr.objective].appendChild(keyResultsContainer);
-
-                            okrBoxContainer.appendChild(currentObjectives[okr.objective]);
-                            objectiveIndex++;
+                function renderTeams(selectedTeam) {
+                    okrContainer.innerHTML = '';
+                    for (const team in teams) {
+                        if (selectedTeam !== 'all' && selectedTeam !== team) {
+                            continue;
                         }
 
-                        // اضافه کردن نتایج کلیدی به بخش مربوطه
-                        const keyResultsContainer = currentObjectives[okr.objective].querySelector('.okr-key-results');
-                        const keyResult = document.createElement('div');
-                        keyResult.className = 'okr-key-result';
-                        const progressPercentage = okr.targetValue > 0 ? Math.min((okr.currentValue / okr.targetValue) * 100, 100) : 0;
-                        const keyResultIndex = keyResultsContainer.children.length + 1;
-                        keyResult.innerHTML = `
-                            <h3>${convertToPersianNumbers(keyResultIndex.toString())}. ${okr.keyResult}</h3>
-                            <div class="progress-bar">
-                                <div class="progress" style="width: ${progressPercentage}%;"></div>
-                                <div class="progress-value">${convertToPersianNumbers(progressPercentage.toFixed(1))}%</div>
-                            </div>
-                            <p>وضعیت فعلی: ${convertToPersianNumbers(okr.currentValue.toString())} ${okr.unit}</p>
-                        `;
-                        keyResultsContainer.appendChild(keyResult);
+                        const teamContainer = document.createElement('div');
+                        teamContainer.className = 'okr-team';
+                        teamContainer.innerHTML = `<h2>تیم: ${convertToPersianNumbers(team)}</h2>`;
 
-                        // محاسبه پیشرفت هدف
-                        if (!currentObjectives[okr.objective].progress) {
-                            currentObjectives[okr.objective].progress = [];
+                        const okrBoxContainer = document.createElement('div');
+                        okrBoxContainer.className = 'okr-box-container';
+
+                        let currentObjectives = {};
+                        let objectiveIndex = 1;
+                        let totalTeamProgress = 0;
+                        let objectiveCount = 0;
+
+                        teams[team].forEach((okr) => {
+                            if (!currentObjectives[okr.objective]) {
+                                // ایجاد باکس جدید برای هر هدف
+                                currentObjectives[okr.objective] = document.createElement('div');
+                                currentObjectives[okr.objective].className = 'okr-box';
+                                currentObjectives[okr.objective].innerHTML = `<h3>${convertToPersianNumbers(objectiveIndex.toString())}. ${okr.objective}</h3>`;
+
+                                // ایجاد بخش نتایج کلیدی به صورت افقی
+                                const keyResultsContainer = document.createElement('div');
+                                keyResultsContainer.className = 'okr-key-results';
+                                currentObjectives[okr.objective].appendChild(keyResultsContainer);
+
+                                okrBoxContainer.appendChild(currentObjectives[okr.objective]);
+                                objectiveIndex++;
+                            }
+
+                            // اضافه کردن نتایج کلیدی به بخش مربوطه
+                            const keyResultsContainer = currentObjectives[okr.objective].querySelector('.okr-key-results');
+                            const keyResult = document.createElement('div');
+                            keyResult.className = 'okr-key-result';
+                            const progressPercentage = okr.targetValue > 0 ? Math.min((okr.currentValue / okr.targetValue) * 100, 100) : 0;
+                            const keyResultIndex = keyResultsContainer.children.length + 1;
+                            keyResult.innerHTML = `
+                                <h3>${convertToPersianNumbers(keyResultIndex.toString())}. ${okr.keyResult}</h3>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: ${progressPercentage}%;"></div>
+                                    <div class="progress-value">${convertToPersianNumbers(progressPercentage.toFixed(1))}%</div>
+                                </div>
+                                <p>وضعیت فعلی: ${convertToPersianNumbers(okr.currentValue.toString())} ${okr.unit}</p>
+                            `;
+                            keyResultsContainer.appendChild(keyResult);
+
+                            // محاسبه پیشرفت هدف
+                            if (!currentObjectives[okr.objective].progress) {
+                                currentObjectives[okr.objective].progress = [];
+                            }
+                            currentObjectives[okr.objective].progress.push(progressPercentage);
+                        });
+
+                        // افزودن نمودار پیشرفت برای هر هدف
+                        for (const objective in currentObjectives) {
+                            const progressValues = currentObjectives[objective].progress;
+                            const averageProgress = progressValues.reduce((a, b) => a + b, 0) / progressValues.length;
+                            totalTeamProgress += averageProgress;
+                            objectiveCount++;
+
+                            const progressBarContainer = document.createElement('div');
+                            progressBarContainer.className = 'progress-bar-red';
+                            progressBarContainer.innerHTML = `
+                                <div class="progress-red" style="width: ${averageProgress}%;"></div>
+                                <div class="progress-value-red">${convertToPersianNumbers(averageProgress.toFixed(1))}%</div>
+                            `;
+                            currentObjectives[objective].appendChild(progressBarContainer);
                         }
-                        currentObjectives[okr.objective].progress.push(progressPercentage);
-                    });
 
-                    // افزودن نمودار پیشرفت برای هر هدف
-                    for (const objective in currentObjectives) {
-                        const progressValues = currentObjectives[objective].progress;
-                        const averageProgress = progressValues.reduce((a, b) => a + b, 0) / progressValues.length;
-                        totalTeamProgress += averageProgress;
-                        objectiveCount++;
+                        // افزودن نمودار پیشرفت برای هر تیم در بالا
+                        if (objectiveCount > 0) {
+                            const teamAverageProgress = totalTeamProgress / objectiveCount;
+                            const teamProgressBarContainer = document.createElement('div');
+                            teamProgressBarContainer.className = 'progress-bar-blue';
+                            teamProgressBarContainer.innerHTML = `
+                                <div class="progress-blue" style="width: ${teamAverageProgress}%;"></div>
+                                <div class="progress-value-blue">${convertToPersianNumbers(teamAverageProgress.toFixed(1))}%</div>
+                            `;
+                            teamContainer.appendChild(teamProgressBarContainer);
+                        }
 
-                        const progressBarContainer = document.createElement('div');
-                        progressBarContainer.className = 'progress-bar-red';
-                        progressBarContainer.innerHTML = `
-                            <div class="progress-red" style="width: ${averageProgress}%;"></div>
-                            <div class="progress-value-red">${convertToPersianNumbers(averageProgress.toFixed(1))}%</div>
-                        `;
-                        currentObjectives[objective].appendChild(progressBarContainer);
+                        teamContainer.appendChild(okrBoxContainer);
+                        okrContainer.appendChild(teamContainer);
                     }
-
-                    teamContainer.appendChild(okrBoxContainer);
-
-                    // افزودن نمودار پیشرفت برای هر تیم
-                    if (objectiveCount > 0) {
-                        const teamAverageProgress = totalTeamProgress / objectiveCount;
-                        const teamProgressBarContainer = document.createElement('div');
-                        teamProgressBarContainer.className = 'progress-bar-red';
-                        teamProgressBarContainer.innerHTML = `
-                            <div class="progress-red" style="width: ${teamAverageProgress}%;"></div>
-                            <div class="progress-value-red">${convertToPersianNumbers(teamAverageProgress.toFixed(1))}%</div>
-                        `;
-                        teamContainer.appendChild(teamProgressBarContainer);
-                    }
-
-                    okrContainer.appendChild(teamContainer);
                 }
+
+                // اضافه کردن قابلیت فیلتر کردن تیم‌ها
+                teamSelect.addEventListener('change', () => {
+                    renderTeams(teamSelect.value);
+                });
+
+                // نمایش اولیه همه تیم‌ها
+                renderTeams('all');
             })
             .catch(error => console.error('Error:', error));
     </script>
