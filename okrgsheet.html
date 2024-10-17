@@ -59,7 +59,6 @@
             gap: 20px;
         }
         .okr-key-result {
-            font-size: 1.4em;
             background: #ffffff;
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -67,6 +66,9 @@
             flex: 1;
             min-width: 250px;
             text-align: center;
+        }
+        .okr-key-result h3 {
+            font-size: 1.4em;
         }
         .progress-bar {
             background: #e0e0e0;
@@ -102,16 +104,6 @@
             max-width: 200px;
             margin-bottom: 20px;
         }
-        .filter-container {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .filter-container select {
-            font-size: 1.2em;
-            padding: 10px;
-            border-radius: 10px;
-            border: 1px solid #ccc;
-        }
     </style>
 </head>
 <body>
@@ -119,13 +111,6 @@
         <img src="logo.png" alt="لوگوی شرکت دکاموند">
         <h1 style="color: #ff6f61; font-size: 3em;">پایش اهداف</h1>
         <p style="font-size: 1.5em; color: #ff6f61;">سه ماهه سوم سال ۱۴۰۳</p>
-    </div>
-
-    <div class="filter-container">
-        <label for="team-filter">فیلتر بر اساس تیم: </label>
-        <select id="team-filter">
-            <option value="all">همه تیم‌ها</option>
-        </select>
     </div>
 
     <div id="okr-container"></div>
@@ -156,7 +141,6 @@
                 }
                 const rows = data.values;
                 const okrContainer = document.getElementById('okr-container');
-                const teamFilter = document.getElementById('team-filter');
                 const teams = {};
 
                 // پردازش داده‌ها
@@ -185,35 +169,56 @@
                     });
                 });
 
-                // اضافه کردن تیم‌ها به فیلتر
-                for (const team in teams) {
-                    const option = document.createElement('option');
-                    option.value = team;
-                    option.textContent = team;
-                    teamFilter.appendChild(option);
-                }
-
                 // نمایش OKR ها بر اساس تیم‌ها
-                function renderOKRs(selectedTeam) {
-                    okrContainer.innerHTML = '';
-                    for (const team in teams) {
-                        if (selectedTeam !== 'all' && team !== selectedTeam) {
-                            continue;
+                for (const team in teams) {
+                    const teamContainer = document.createElement('div');
+                    teamContainer.className = 'okr-team';
+                    teamContainer.innerHTML = `<h2>تیم: ${convertToPersianNumbers(team)}</h2>`;
+
+                    const okrBoxContainer = document.createElement('div');
+                    okrBoxContainer.className = 'okr-box-container';
+
+                    let currentObjectives = {};
+                    let objectiveIndex = 1;
+
+                    teams[team].forEach((okr) => {
+                        if (!currentObjectives[okr.objective]) {
+                            // ایجاد باکس جدید برای هر هدف
+                            currentObjectives[okr.objective] = document.createElement('div');
+                            currentObjectives[okr.objective].className = 'okr-box';
+                            currentObjectives[okr.objective].innerHTML = `<h3>${convertToPersianNumbers(objectiveIndex.toString())}. ${okr.objective}</h3>`;
+
+                            // ایجاد بخش نتایج کلیدی به صورت افقی
+                            const keyResultsContainer = document.createElement('div');
+                            keyResultsContainer.className = 'okr-key-results';
+                            currentObjectives[okr.objective].appendChild(keyResultsContainer);
+
+                            okrBoxContainer.appendChild(currentObjectives[okr.objective]);
+                            objectiveIndex++;
                         }
 
-                        const teamContainer = document.createElement('div');
-                        teamContainer.className = 'okr-team';
-                        teamContainer.innerHTML = `<h2>تیم: ${convertToPersianNumbers(team)}</h2>`;
+                        // اضافه کردن نتایج کلیدی به بخش مربوطه
+                        const keyResultsContainer = currentObjectives[okr.objective].querySelector('.okr-key-results');
+                        const keyResult = document.createElement('div');
+                        keyResult.className = 'okr-key-result';
+                        const progressPercentage = okr.targetValue > 0 ? Math.min((okr.currentValue / okr.targetValue) * 100, 100) : 0;
+                        const keyResultIndex = keyResultsContainer.children.length + 1;
+                        keyResult.innerHTML = `
+                            <h3>${convertToPersianNumbers(keyResultIndex.toString())}. ${okr.keyResult}</h3>
+                            <div class="progress-bar">
+                                <div class="progress" style="width: ${progressPercentage}%;"></div>
+                                <div class="progress-value">${convertToPersianNumbers(progressPercentage.toFixed(1))}%</div>
+                            </div>
+                            <p>وضعیت فعلی: ${convertToPersianNumbers(okr.currentValue.toString())} ${okr.unit}</p>
+                        `;
+                        keyResultsContainer.appendChild(keyResult);
+                    });
 
-                        const okrBoxContainer = document.createElement('div');
-                        okrBoxContainer.className = 'okr-box-container';
-
-                        let currentObjectives = {};
-                        let objectiveIndex = 1;
-
-                        teams[team].forEach((okr) => {
-                            if (!currentObjectives[okr.objective]) {
-                                // ایجاد باکس جدید برای هر هدف
-                                currentObjectives[okr.objective] = document.createElement('div');
-                                currentObjectives[okr.objective].className = 'okr-box';
-                                currentObjectives[okr.objective].innerHTML = `<h3>${convertToPersianNumbers(objectiveIndex.toString())}. ${okr.objective}</h3>`;
+                    teamContainer.appendChild(okrBoxContainer);
+                    okrContainer.appendChild(teamContainer);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    </script>
+</body>
+</html>
