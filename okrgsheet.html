@@ -267,7 +267,8 @@
                                 // ایجاد بخش نتایج کلیدی به صورت افقی
                                 const keyResultsContainer = document.createElement('div');
                                 keyResultsContainer.className = 'okr-key-results';
-                                currentObjectives[okr.objective].appendChild(keyResultsContainer);
+                                currentObjectives[okr.objective].appendChild(progressBarContainer);
+                            currentObjectives[okr.objective].appendChild(keyResultsContainer);
 
                                 okrBoxContainer.appendChild(currentObjectives[okr.objective]);
                                 objectiveIndex++;
@@ -306,7 +307,7 @@
                             const progressBarContainer = document.createElement('div');
                             progressBarContainer.className = 'progress-bar-red';
                             progressBarContainer.innerHTML = `
-                                <div class="progress-red" style="width: ${averageProgress}%;"></div>
+                                <div class="progress-red" style="width: ${averageProgress}%; height: 30px;"></div>
                                 <div class="progress-value-red">${convertToPersianNumbers(averageProgress.toFixed(1))}%</div>
                             `;
                             currentObjectives[objective].appendChild(progressBarContainer);
