@@ -267,7 +267,7 @@
                                 // ایجاد بخش نتایج کلیدی به صورت افقی
                                 const keyResultsContainer = document.createElement('div');
                                 keyResultsContainer.className = 'okr-key-results';
-                                currentObjectives[okr.objective].appendChild(progressBarContainer);
+                                
                             currentObjectives[okr.objective].appendChild(keyResultsContainer);
 
                                 okrBoxContainer.appendChild(currentObjectives[okr.objective]);
@@ -298,19 +298,14 @@
                         });
 
                         // افزودن نمودار پیشرفت برای هر هدف
-                        for (const objective in currentObjectives) {
-                            const progressValues = currentObjectives[objective].progress;
-                            const averageProgress = progressValues.reduce((a, b) => a + b, 0) / progressValues.length;
-                            totalTeamProgress += averageProgress;
-                            objectiveCount++;
-
+                        for (const objective in currentObjectives) {$1
                             const progressBarContainer = document.createElement('div');
                             progressBarContainer.className = 'progress-bar-red';
                             progressBarContainer.innerHTML = `
                                 <div class="progress-red" style="width: ${averageProgress}%; height: 30px;"></div>
                                 <div class="progress-value-red">${convertToPersianNumbers(averageProgress.toFixed(1))}%</div>
                             `;
-                            currentObjectives[objective].appendChild(progressBarContainer);
+                            currentObjectives[objective].insertBefore(progressBarContainer, currentObjectives[objective].querySelector('.okr-key-results'));
                         }
 
                         // افزودن نمودار پیشرفت برای هر تیم در بالا
