@@ -298,7 +298,9 @@
                         });
 
                         // افزودن نمودار پیشرفت برای هر هدف
-                        for (const objective in currentObjectives) {$1
+                        for (const objective in currentObjectives) {
+                            const progressValues = currentObjectives[objective].progress;
+                            const averageProgress = progressValues.reduce((a, b) => a + b, 0) / progressValues.length;
                             const progressBarContainer = document.createElement('div');
                             progressBarContainer.className = 'progress-bar-red';
                             progressBarContainer.innerHTML = `
@@ -306,6 +308,7 @@
                                 <div class="progress-value-red">${convertToPersianNumbers(averageProgress.toFixed(1))}%</div>
                             `;
                             currentObjectives[objective].insertBefore(progressBarContainer, currentObjectives[objective].querySelector('.okr-key-results'));
+                        }
                         }
 
                         // افزودن نمودار پیشرفت برای هر تیم در بالا
