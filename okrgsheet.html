@@ -310,6 +310,7 @@
                             currentObjectives[objective].insertBefore(progressBarContainer, currentObjectives[objective].querySelector('.okr-key-results'));
                         }
                         }
+                        }
 
                         // افزودن نمودار پیشرفت برای هر تیم در بالا
                         if (objectiveCount > 0) {
@@ -317,10 +318,11 @@
                             const teamProgressBarContainer = document.createElement('div');
                             teamProgressBarContainer.className = 'progress-bar-blue';
                             teamProgressBarContainer.innerHTML = `
-                                <div class="progress-blue" style="width: ${teamAverageProgress}%;"></div>
+                                <div class="progress-blue" style="width: ${teamAverageProgress}%; height: 45px;"></div>
                                 <div class="progress-value-blue">${convertToPersianNumbers(teamAverageProgress.toFixed(1))}%</div>
                             `;
-                            teamContainer.appendChild(teamProgressBarContainer);
+                            teamContainer.insertBefore(teamProgressBarContainer, teamContainer.firstChild);
+                        }
                         }
 
                         teamContainer.appendChild(okrBoxContainer);
