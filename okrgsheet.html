@@ -28,7 +28,7 @@
         }
         .okr-box-container {
             display: flex;
-            flex-wrap: nowrap;
+            flex-wrap: wrap;
             gap: 20px;
             border-top: 2px dashed #ff6f61;
             padding-top: 20px;
@@ -40,8 +40,8 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
             padding: 30px;
             margin-bottom: 30px;
-            flex: 1;
-            min-width: 300px;
+            flex: 1 1 calc(33.333% - 20px);
+            flex-basis: calc(100% - 20px); max-width: 300px;
             transition: transform 0.3s;
         }
         .okr-box:hover {
