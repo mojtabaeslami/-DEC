@@ -99,7 +99,7 @@
 </head>
 <body>
     <div class="survey-container">
-        <h1>۷پرسشنامه ارزیابی رضایت از برند</h1>
+        <h1>8پرسشنامه ارزیابی رضایت از برند</h1>
         <p>سلام! از اینکه وقت می‌گذارید و این پرسشنامه را پر می‌کنید، بسیار سپاسگزاریم.</p>
 
         <form id="brandSurveyForm">
@@ -171,6 +171,7 @@
 
             fetch(url, {
                 method: 'POST',
+                mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json'
                 },
