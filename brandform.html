@@ -99,7 +99,7 @@
 </head>
 <body>
     <div class="survey-container">
-        <h1>3پرسشنامه ارزیابی رضایت از برند</h1>
+        <h1>۴پرسشنامه ارزیابی رضایت از برند</h1>
         <p>سلام! از اینکه وقت می‌گذارید و این پرسشنامه را پر می‌کنید، بسیار سپاسگزاریم.</p>
 
         <form id="brandSurveyForm">
@@ -167,7 +167,7 @@
             document.getElementById('formResponse').innerText = 'در حال ارسال، لطفاً منتظر بمانید...';
             document.getElementById('formResponse').style.display = 'block';
 
-            fetch('https://script.google.com/macros/s/AKfycbw3ImSZtKG1q7f8eq7abmLE_XS--XjKlm9cOo4BQPuFdBJMvOkd4PVHpWPIlMSvhIqz/exec', {
+            fetch('https://script.google.com/macros/s/AKfycbxGKgEuVd_HXFVXVAd2w0Ag1YGMnykFAKsACorUS3WCXYYzS3Rccl0YvKDDZ4_aQ9pZGw/exec', {
                 method: 'POST',
                 body: JSON.stringify(formObject),
                 headers: {
