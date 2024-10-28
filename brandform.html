@@ -99,7 +99,7 @@
 </head>
 <body>
     <div class="survey-container">
-        <h1>۴پرسشنامه ارزیابی رضایت از برند</h1>
+        <h1>6پرسشنامه ارزیابی رضایت از برند</h1>
         <p>سلام! از اینکه وقت می‌گذارید و این پرسشنامه را پر می‌کنید، بسیار سپاسگزاریم.</p>
 
         <form id="brandSurveyForm">
@@ -158,7 +158,7 @@
         document.getElementById('brandSurveyForm').addEventListener('submit', function(event) {
             event.preventDefault();
 
-            // ارسال اطلاعات فرم به اسکریپت گوگل
+            // ارسال اطلاعات فرم به Google Sheets API
             const formData = new FormData(this);
             const formObject = {};
             formData.forEach((value, key) => { formObject[key] = value; });
@@ -167,12 +167,20 @@
             document.getElementById('formResponse').innerText = 'در حال ارسال، لطفاً منتظر بمانید...';
             document.getElementById('formResponse').style.display = 'block';
 
-            fetch('https://script.google.com/macros/s/AKfycbxGKgEuVd_HXFVXVAd2w0Ag1YGMnykFAKsACorUS3WCXYYzS3Rccl0YvKDDZ4_aQ9pZGw/exec', {
+            const spreadsheetId = '1118UFsDWOzDUBF2yPdS4vlccWOkzNqSKBBZoA4W3b14';
+            const apiKey = 'AIzaSyBnCVRZ0lbDJVRrG5I0QaS7wkKcibhkjmU';
+            const sheetName = 'Sheet1';
+            const range = `${sheetName}!A1`;
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}:append?valueInputOption=RAW&key=${apiKey}`;
+
+            const values = [Object.values(formObject)];
+
+            fetch(url, {
                 method: 'POST',
-                body: JSON.stringify(formObject),
                 headers: {
                     'Content-Type': 'application/json'
-                }
+                },
+                body: JSON.stringify({ values: values })
             })
             .then(response => {
                 if (!response.ok) {
