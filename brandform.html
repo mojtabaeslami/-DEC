@@ -176,7 +176,7 @@
             })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error('Network response was not ok: ' + response.status);
                 }
                 return response.json();
             })
@@ -188,7 +188,7 @@
             })
             .catch(error => {
                 document.getElementById('formResponse').className = 'error-message';
-                document.getElementById('formResponse').innerText = 'خطایی رخ داد. لطفاً دوباره تلاش کنید.';
+                document.getElementById('formResponse').innerText = 'خطایی رخ داد. لطفاً دوباره تلاش کنید. (' + error.message + ')';
                 document.getElementById('formResponse').style.display = 'block';
                 console.error('Error:', error);
             });
