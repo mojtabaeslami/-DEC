@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پرسشنامه ارزیابی رضایت از برند</title>
+</head>
+<body>
+    <h1>پرسشنامه ارزیابی رضایت از برند</h1>
+    <p>سلام! از اینکه وقت می‌گذارید و این پرسشنامه را پر می‌کنید، بسیار سپاسگزاریم. هدف ما این است که به شما کمک کنیم تا به برند خود نگاهی دقیق‌تر بیندازید و ارزیابی کنید که آیا برندتان به درستی در حال ارائه ارزش‌های مورد نظرتان است یا خیر.</p>
+
+    <form id="brandSurveyForm">
+        <!-- سوال ۱ -->
+        <label>۱. آیا برند شما به طور کامل ارزش‌ها و هویت شما را به مشتریانتان منتقل می‌کند؟</label><br>
+        <select name="question1" required>
+            <option value="کاملاً بله">کاملاً بله</option>
+            <option value="تا حد زیادی بله">تا حد زیادی بله</option>
+            <option value="تا حدودی">تا حدودی</option>
+            <option value="نه چندان">نه چندان</option>
+            <option value="اصلاً">اصلاً</option>
+        </select>
+        <br><br>
+
+        <!-- سوال ۲ -->
+        <label>۲. تا چه اندازه برندتان توانسته است اعتماد و وفاداری مشتریان شما را جلب کند؟</label><br>
+        <select name="question2" required>
+            <option value="بسیار زیاد">بسیار زیاد</option>
+            <option value="زیاد">زیاد</option>
+            <option value="متوسط">متوسط</option>
+            <option value="کم">کم</option>
+            <option value="اصلاً">اصلاً</option>
+        </select>
+        <br><br>
+
+        <!-- سایر سوالات مشابه به این سبک اضافه شوند -->
+        <!-- برای سوالات چند انتخابی و سوالات متنی -->
+
+        <!-- سوال ۷ (ویژگی شخصیتی) -->
+        <label>۷. اگر برند شما فردی بود، چطور او را توصیف می‌کردید؟ (لطفاً ۳ تا ۵ ویژگی شخصیتی را ذکر کنید)</label><br>
+        <textarea name="question7" rows="4" cols="50" required></textarea>
+        <br><br>
+
+        <!-- سوالات دیگر -->
+
+        <!-- دکمه ارسال -->
+        <button type="submit">ارسال نظرسنجی</button>
+    </form>
+
+    <script>
+        document.getElementById('brandSurveyForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // ارسال اطلاعات فرم به اسکریپت گوگل
+            const formData = new FormData(this);
+            const formObject = {};
+            formData.forEach((value, key) => { formObject[key] = value; });
+
+            fetch('https://script.google.com/macros/s/AKfycbwAnnI552x1P3H8cJNnds4fNIgEfRQH21raP5GEEB3icHvIkMBxpQUkUI4c7tHj8OfMFw/exec', {
+                method: 'POST',
+                body: JSON.stringify(formObject),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => response.json())
+              .then(data => {
+                  alert('نظرسنجی با موفقیت ارسال شد!');
+                  document.getElementById('brandSurveyForm').reset();
+              })
+              .catch(error => {
+                  alert('خطایی رخ داد. لطفاً دوباره تلاش کنید.');
+                  console.error('Error:', error);
+              });
+        });
+    </script>
+</body>
+</html>
