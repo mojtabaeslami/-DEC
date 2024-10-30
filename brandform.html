@@ -99,7 +99,7 @@
 </head>
 <body>
     <div class="survey-container">
-        <h1>۹پرسشنامه ارزیابی رضایت از برند</h1>
+        <h1>۱۰پرسشنامه ارزیابی رضایت از برند</h1>
         <p>سلام! از اینکه وقت می‌گذارید و این پرسشنامه را پر می‌کنید، بسیار سپاسگزاریم.</p>
 
         <form id="brandSurveyForm">
@@ -167,34 +167,34 @@
             document.getElementById('formResponse').innerText = 'در حال ارسال، لطفاً منتظر بمانید...';
             document.getElementById('formResponse').style.display = 'block';
 
-            const url = 'https://script.google.com/macros/s/AKfycbzzlhqvKig2o2Ep3TerhDOFwY4skXEHg6FVRX_tk454yPzNJosAOjzLBVX0u244Fyc4-g/exec';
+            const url = 'https://script.google.com/macros/s/AKfycbwCmxPgwTiDf4N1EtkXXaJlk0lN3pnU0XtPDXMs-epAZVXAPMOyOsAXvTnIEklnAAC9vQ/exec';
+                fetch(url, {
+                    method: 'POST',
+                    mode: 'cors', // این خط را اضافه کنید تا درخواست به‌عنوان CORS شناسایی شود
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formObject)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById('formResponse').className = 'success-message';
+                    document.getElementById('formResponse').innerText = 'نظرسنجی با موفقیت ارسال شد!';
+                    document.getElementById('formResponse').style.display = 'block';
+                    document.getElementById('brandSurveyForm').reset();
+                })
+                .catch(error => {
+                    document.getElementById('formResponse').className = 'error-message';
+                    document.getElementById('formResponse').innerText = 'خطایی رخ داد. لطفاً دوباره تلاش کنید. (' + error.message + ')';
+                    document.getElementById('formResponse').style.display = 'block';
+                    console.error('Error:', error);
+                });
 
-            fetch(url, {
-    method: 'POST',
-    mode: 'cors', // اضافه کردن mode: 'cors' برای پشتیبانی بهتر از Cross-Origin
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(formObject)
-})
-.then(response => {
-    if (!response.ok) {
-        throw new Error('Network response was not ok: ' + response.status);
-    }
-    return response.json();
-})
-.then(data => {
-    document.getElementById('formResponse').className = 'success-message';
-    document.getElementById('formResponse').innerText = 'نظرسنجی با موفقیت ارسال شد!';
-    document.getElementById('formResponse').style.display = 'block';
-    document.getElementById('brandSurveyForm').reset();
-})
-.catch(error => {
-    document.getElementById('formResponse').className = 'error-message';
-    document.getElementById('formResponse').innerText = 'خطایی رخ داد. لطفاً دوباره تلاش کنید. (' + error.message + ')';
-    document.getElementById('formResponse').style.display = 'block';
-    console.error('Error:', error);
-});
 
 
         });
