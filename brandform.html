@@ -170,31 +170,29 @@
             const url = 'https://script.google.com/macros/s/AKfycby-EqC0S4VSny-5vHDW--vF2a7V_Z3c7LSrAu_I0gelVuSeUFgWxRWIIl8qnCWhpnQX/exec';
 
             fetch(url, {
-                method: 'POST',
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formObject)
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok: ' + response.status);
-                }
-                return response.json();
-            })
-            .then(data => {
-                document.getElementById('formResponse').className = 'success-message';
-                document.getElementById('formResponse').innerText = 'نظرسنجی با موفقیت ارسال شد!';
-                document.getElementById('formResponse').style.display = 'block';
-                document.getElementById('brandSurveyForm').reset();
-            })
-            .catch(error => {
-                document.getElementById('formResponse').className = 'error-message';
-                document.getElementById('formResponse').innerText = 'خطایی رخ داد. لطفاً دوباره تلاش کنید. (' + error.message + ')';
-                document.getElementById('formResponse').style.display = 'block';
-                console.error('Error:', error);
-            });
+    method: 'POST',
+    mode: 'cors', // اضافه کردن حالت cors برای پشتیبانی بهتر از Cross-Origin
+    body: new URLSearchParams(formData) // ارسال داده‌ها به‌صورت URL encoded
+})
+.then(response => {
+    if (!response.ok) {
+        throw new Error('Network response was not ok: ' + response.status);
+    }
+    return response.json();
+})
+.then(data => {
+    document.getElementById('formResponse').className = 'success-message';
+    document.getElementById('formResponse').innerText = 'نظرسنجی با موفقیت ارسال شد!';
+    document.getElementById('formResponse').style.display = 'block';
+    document.getElementById('brandSurveyForm').reset();
+})
+.catch(error => {
+    document.getElementById('formResponse').className = 'error-message';
+    document.getElementById('formResponse').innerText = 'خطایی رخ داد. لطفاً دوباره تلاش کنید. (' + error.message + ')';
+    document.getElementById('formResponse').style.display = 'block';
+    console.error('Error:', error);
+});
+
         });
     </script>
 </body>
