@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پایش اهداف</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap">
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            direction: rtl;
+        }
+        .okr-team {
+            margin-bottom: 50px;
+        }
+        .okr-team h2 {
+            color: #ed1c24;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 2em;
+        }
+        .okr-box-container {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 0;
+            border-top: 2px dashed #ed1c24;
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+        .okr-box {
+            background: linear-gradient(to bottom, #ffffff, #f1f1f1);
+            border-radius: 20px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+            flex: 1 1 calc(33.333% - 20px); max-width: calc(33.333% - 20px);
+            transition: transform 0.3s;
+        }
+        .okr-box:hover {
+            transform: translateY(-10px);
+        }
+        .okr-box h3 {
+            color: #000;
+            font-weight: 700;
+            margin-bottom: 20px;
+            font-size: 1em;
+text-align: center;
+        }
+        .okr-key-results {
+            display: block;
+            gap: 20px;
+        }
+        .okr-key-result {
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            flex: 1;
+            min-width: 250px;
+            text-align: center;
+        }
+        .okr-key-result h3 {
+            color: #000;
+            font-size: 0.75em;
+        }
+        .progress-bar {
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            height: 25px;
+            margin: 10px 0;
+            position: relative;
+        }
+        .progress {
+            background: linear-gradient(to right, #02a651, #81c784);
+            height: 100%;
+            transition: width 0.4s ease-in-out;
+            border-radius: 15px;
+        }
+        .progress-value {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: bold;
+            color: #333;
+        }
+        .progress-bar-red {
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            height: 25px;
+            margin: 10px 0;
+            position: relative;
+        }
+        .progress-red {
+            background: #ed1c24;
+            height: 100%;
+            transition: width 0.4s ease-in-out;
+            border-radius: 15px;
+        }
+        .progress-value-red {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: bold;
+            color: #333;
+        }
+        .progress-bar-blue {
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            height: 45px;
+            margin: 20px 0;
+            position: relative;
+        }
+        .progress-blue {
+            background: #0056b3;
+            height: 100%;
+            transition: width 0.4s ease-in-out;
+            border-radius: 15px;
+        }
+        .progress-value-blue {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: bold;
+            color: #fff;
+        }
+        p {
+            font-size: 0.75em;
+            margin: 15px 0;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .header img {
+            max-width: 300px;
+            margin-bottom: 10px;
+        }
+        #team-filter {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        #team-filter select {
+            font-family: 'Vazirmatn', sans-serif;
+            font-size: 1.2em;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="http://armanbehta.com/wp-content/uploads/2024/07/Arman-Behta-Logo.svg" alt="لوگوی شرکت دکاموند">
+        <h1 style="color: #ed1c24; font-size: 3em;">پایش اهداف</h1>
+        <p style="font-size: 1.5em; color: #ed1c24;">سه ماهه سوم سال ۱۴۰۳</p>
+    </div>
+
+    <div id="team-filter">
+        <label for="team-select">انتخاب تیم:</label>
+        <select id="team-select">
+            <option value="all">همه تیم‌ها</option>
+        </select>
+    </div>
+
+    <div id="okr-container"></div>
+
+    <script>
+        function convertToPersianNumbers(str) {
+            return str.replace(/[0-9]/g, function(d) {
+                return '۰۱۲۳۴۵۶۷۸۹'[d];
+            });
+        }
+
+        // مشخصات گوگل شیت
+        const apiKey = 'AIzaSyBnCVRZ0lbDJVRrG5I0QaS7wkKcibhkjmU';
+        const spreadsheetId = '1glBjMQ7gT6kCNe0zaRPMFxpFKEaJByjJiDYo3Zre6XY';
+        const range = 'Sheet1';
+
+        // خواندن داده‌ها از گوگل شیت
+        fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (!data.values) {
+                    throw new Error('No data found in the spreadsheet. Please check the range and permissions.');
+                }
+                const rows = data.values;
+                const okrContainer = document.getElementById('okr-container');
+                const teamSelect = document.getElementById('team-select');
+                const teams = {};
+
+                // پردازش داده‌ها
+                rows.slice(1).forEach((row) => {
+                    const [team, objective, keyResult, type, startValue, currentValue, targetValue, unit] = row;
+                    if (!team || !objective || !keyResult || type.trim() !== 'نتیجه کلیدی') {
+                        return;
+                    }
+
+                    // تبدیل مقادیر به اعداد و بررسی اینکه مقدار هدف و وضعیت فعلی صحیح باشند
+                    const parsedStartValue = isNaN(parseFloat(startValue)) ? 0 : parseFloat(startValue.replace(/,/g, ''));
+                    const parsedCurrentValue = isNaN(parseFloat(currentValue)) ? 0 : parseFloat(currentValue.replace(/,/g, ''));
+                    const parsedTargetValue = isNaN(parseFloat(targetValue)) ? 0 : parseFloat(targetValue.replace(/,/g, ''));
+
+                    if (!teams[team]) {
+                        teams[team] = [];
+                        // افزودن تیم به فیلتر
+                        const option = document.createElement('option');
+                        option.value = team;
+                        option.textContent = team;
+                        teamSelect.appendChild(option);
+                    }
+                    teams[team].push({
+                        team,
+                        objective,
+                        keyResult,
+                        startValue: parsedStartValue,
+                        currentValue: parsedCurrentValue,
+                        targetValue: parsedTargetValue,
+                        unit
+                    });
+                });
+
+                // نمایش OKR ها بر اساس تیم‌ها
+                function renderTeams(selectedTeam) {
+                    okrContainer.innerHTML = '';
+                    for (const team in teams) {
+                        if (selectedTeam !== 'all' && selectedTeam !== team) {
+                            continue;
+                        }
+
+                        const teamContainer = document.createElement('div');
+                        teamContainer.className = 'okr-team';
+                        teamContainer.innerHTML = `<h2>تیم: ${convertToPersianNumbers(team)}</h2>`;
+
+                        const okrBoxContainer = document.createElement('div');
+                        okrBoxContainer.className = 'okr-box-container';
+
+                        let currentObjectives = {};
+                        let objectiveIndex = 1;
+                        let totalTeamProgress = 0;
+                        let objectiveCount = 0;
+
+                        teams[team].forEach((okr) => {
+                            if (!currentObjectives[okr.objective]) {
+                                // ایجاد باکس جدید برای هر هدف
+                                currentObjectives[okr.objective] = document.createElement('div');
+                                currentObjectives[okr.objective].className = 'okr-box';
+                                currentObjectives[okr.objective].innerHTML = `<h3>${convertToPersianNumbers(objectiveIndex.toString())}. ${okr.objective}</h3>`;
+
+                                // ایجاد بخش نتایج کلیدی به صورت افقی
+                                const keyResultsContainer = document.createElement('div');
+                                keyResultsContainer.className = 'okr-key-results';
+                                currentObjectives[okr.objective].appendChild(keyResultsContainer);
+                                okrBoxContainer.appendChild(currentObjectives[okr.objective]);
+                                objectiveIndex++;
+                            }
+
+                            // اضافه کردن نتایج کلیدی به بخش مربوطه
+                            const keyResultsContainer = currentObjectives[okr.objective].querySelector('.okr-key-results');
+                            const keyResult = document.createElement('div');
+                            keyResult.className = 'okr-key-result';
+                            const progressPercentage = okr.targetValue > 0 ? Math.min((okr.currentValue / okr.targetValue) * 100, 100) : 0;
+                            const keyResultIndex = keyResultsContainer.children.length + 1;
+                            keyResult.innerHTML = `
+                                <h3>${convertToPersianNumbers(keyResultIndex.toString())}. ${okr.keyResult}</h3>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: ${progressPercentage}%;"></div>
+                                    <div class="progress-value">${convertToPersianNumbers(progressPercentage.toFixed(1))}%</div>
+                                </div>
+                                <p>وضعیت فعلی: ${convertToPersianNumbers(okr.currentValue.toString())} ${okr.unit}</p>
+                            `;
+                            keyResultsContainer.appendChild(keyResult);
+
+                            // محاسبه پیشرفت هدف
+                            if (!currentObjectives[okr.objective].progress) {
+                                currentObjectives[okr.objective].progress = [];
+                            }
+                            currentObjectives[okr.objective].progress.push(progressPercentage);
+                        });
+
+                        // افزودن نمودار پیشرفت برای هر هدف
+                        for (const objective in currentObjectives) {
+                            const progressValues = currentObjectives[objective].progress;
+                            const averageProgress = progressValues.reduce((a, b) => a + b, 0) / progressValues.length;
+                            const progressBarContainer = document.createElement('div');
+                            progressBarContainer.className = 'progress-bar-red';
+                            progressBarContainer.innerHTML = `
+                                <div class="progress-red" style="width: ${averageProgress}%; height: 30px;"></div>
+                                <div class="progress-value-red">${convertToPersianNumbers(averageProgress.toFixed(1))}%</div>
+                            `;
+                            currentObjectives[objective].insertBefore(progressBarContainer, currentObjectives[objective].querySelector('.okr-key-results'));
+                        }
+
+                        // افزودن نمودار پیشرفت برای هر تیم در بالا
+                        if (objectiveCount > 0) {
+                            const teamAverageProgress = totalTeamProgress / objectiveCount;
+                            const teamProgressBarContainer = document.createElement('div');
+                            teamProgressBarContainer.className = 'progress-bar-blue';
+                            teamProgressBarContainer.innerHTML = `
+                                <div class="progress-blue" style="width: ${teamAverageProgress}%; height: 45px;"></div>
+                                <div class="progress-value-blue">${convertToPersianNumbers(teamAverageProgress.toFixed(1))}%</div>
+                            `;
+                            teamContainer.insertBefore(teamProgressBarContainer, teamContainer.firstChild);
+                        }
+
+                        teamContainer.appendChild(okrBoxContainer);
+                        okrContainer.appendChild(teamContainer);
+                    }
+                }
+
+                // اضافه کردن قابلیت فیلتر کردن تیم‌ها
+                teamSelect.addEventListener('change', () => {
+                    renderTeams(teamSelect.value);
+                });
+
+                // نمایش اولیه همه تیم‌ها
+                renderTeams('all');
+            })
+            .catch(error => console.error('Error:', error));
+    </script>
+</body>
+</html>
